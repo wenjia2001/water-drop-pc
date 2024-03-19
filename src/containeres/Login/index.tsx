@@ -11,27 +11,35 @@ import {
 } from '@ant-design/pro-components';
 import {Tabs, message} from 'antd';
 import {useMutation} from '@apollo/client'
-import styles from './index.module.less'
 import { LOGIN, SEND_CODE_MSG } from '../../graphql/auth';
+import styles from './index.module.less'
+import { AUTH_TOKEN } from '../../utils/constants';
+import { useNavigate } from 'react-router-dom';
 
-interface IValue{
-  tel:string
-  code:string
-}
 
   // eslint-disable-next-line react-refresh/only-export-components
   export default () => {
+    interface IValue{
+      tel:string
+      code:string
+      autoLogin:boolean
+    }
+    const nav=useNavigate()
     const [run]= useMutation(SEND_CODE_MSG)
     const [login] =useMutation(LOGIN)
     const loginHandler=async (values:IValue)=>{
       const res=await login({
         variables:values
       })
-      if (res.data.login) {
-        message.success('登录成功')
+      if (res.data.login.code===200) {
+        if (values.autoLogin) {
+          localStorage.setItem(AUTH_TOKEN, res.data.login.data)
+        }
+        message.success(res.data.login.message)
+        nav('/')
         return
       }
-      message.error('登录失败')
+      message.error(res.data.login.message)
     }
 
     return (
@@ -96,10 +104,10 @@ interface IValue{
                         tel
                       }
                     })
-                    if (res.data.sendCodeMsg) {
-                      message.success('获取验证码成功！')
+                    if (res.data.sendCodeMsg.code===200) {
+                      message.success(res.data.sendCodeMsg.message)
                     }else{
-                      message.error('获取验证码失败！')
+                      message.error(res.data.sendCodeMsg.message)
                     }
                   }}
                 />

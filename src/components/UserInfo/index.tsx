@@ -10,7 +10,7 @@ const UserInfo = ({children}:IPropChild) => {
   const {loading}=useGetUser()
   return (
     <Spin spinning={loading}>
-      <div>
+      <div style={{ height: '100vh' }}>
         {children}
       </div>
     </Spin>

@@ -16,6 +16,7 @@ import styles from './index.module.less'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUTH_TOKEN } from '@/utils/constants';
 import { useTitle } from '@/hooks';
+import { useUserContext } from '@/hooks/userHooks';
 
 
   // eslint-disable-next-line react-refresh/only-export-components
@@ -29,12 +30,14 @@ import { useTitle } from '@/hooks';
     const [run]= useMutation(SEND_CODE_MSG)
     const [login] =useMutation(LOGIN)
     const [params]=useSearchParams()
+    const {store}=useUserContext()
     useTitle('登录')
     const loginHandler=async (values:IValue)=>{
       const res=await login({
         variables:values
       })
       if (res.data.login.code===200) {
+        store.refetchHandler?.()
         if (values.autoLogin) {
           sessionStorage.setItem(AUTH_TOKEN, '')
           localStorage.setItem(AUTH_TOKEN, res.data.login.data)

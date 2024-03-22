@@ -11,10 +11,11 @@ import {
 } from '@ant-design/pro-components';
 import {Tabs, message} from 'antd';
 import {useMutation} from '@apollo/client'
-import { LOGIN, SEND_CODE_MSG } from '../../graphql/auth';
+import { LOGIN, SEND_CODE_MSG } from '@/graphql/auth';
 import styles from './index.module.less'
-import { AUTH_TOKEN } from '../../utils/constants';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AUTH_TOKEN } from '@/utils/constants';
+import { useTitle } from '@/hooks';
 
 
   // eslint-disable-next-line react-refresh/only-export-components
@@ -27,16 +28,22 @@ import { useNavigate } from 'react-router-dom';
     const nav=useNavigate()
     const [run]= useMutation(SEND_CODE_MSG)
     const [login] =useMutation(LOGIN)
+    const [params]=useSearchParams()
+    useTitle('登录')
     const loginHandler=async (values:IValue)=>{
       const res=await login({
         variables:values
       })
       if (res.data.login.code===200) {
         if (values.autoLogin) {
+          sessionStorage.setItem(AUTH_TOKEN, '')
           localStorage.setItem(AUTH_TOKEN, res.data.login.data)
+        }else{
+          localStorage.setItem(AUTH_TOKEN,'')
+          sessionStorage.setItem(AUTH_TOKEN, res.data.login.data)
         }
         message.success(res.data.login.message)
-        nav('/')
+        nav(params.get('orgUrl')||'/')
         return
       }
       message.error(res.data.login.message)
@@ -46,15 +53,17 @@ import { useNavigate } from 'react-router-dom';
       <ProConfigProvider hashed={false}>
         <div className={styles.container} >
           <LoginForm
+          initialValues={{tel:'19985444029'}}
           onFinish={loginHandler}
             logo="http://water-drop-wj.oss-cn-hangzhou.aliyuncs.com/images/jay2.jpg"
             >
             <Tabs
               centered
-            >
-              <Tabs.TabPane key={'phone'} tab={'手机号登录'} />
-            </Tabs>
-
+              items={[{
+                key:'phoneNumber',
+                label:'手机号登录'
+              }]}
+            />
               <>
                 <ProFormText
                   fieldProps={{

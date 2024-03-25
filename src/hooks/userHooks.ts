@@ -19,11 +19,14 @@ export const useGetUser = () => {
   const { loading, refetch } = useQuery<{ getUserInfo: IUser }>(GET_USER, {
     onCompleted: (data) => {
       if (data.getUserInfo) {
-        const { id, tel, name } = data.getUserInfo
+        const { id, tel, name, desc, avatar } = data.getUserInfo
         setStore({
           id,
           tel,
-          name
+          name,
+          desc,
+          avatar,
+          refetchHandler: refetch
         })
         // 当前在登录页面，且已经登录，那就直接跳到首页
         if (location.pathname.startsWith('/login')) {

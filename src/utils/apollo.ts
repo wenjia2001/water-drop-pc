@@ -1,20 +1,21 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context'
+import { setContext } from '@apollo/client/link/context';
 import { AUTH_TOKEN } from './constants';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/graphql'
-})
+  uri: 'http://localhost:3000/graphql',
+});
 
 const authLink = setContext((_, { headers }) => {
-  const token = sessionStorage.getItem(AUTH_TOKEN) || localStorage.getItem(AUTH_TOKEN)
+  const token =
+    sessionStorage.getItem(AUTH_TOKEN) || localStorage.getItem(AUTH_TOKEN);
   return {
     headers: {
       ...headers,
-      Authorization: token ? `Bearer ${token}` : ''
-    }
-  }
-})
+      Authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
 // 初始化Apollp
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),

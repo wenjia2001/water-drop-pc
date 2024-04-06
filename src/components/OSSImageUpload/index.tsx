@@ -1,5 +1,4 @@
-import { useRef} from 'react';
-import ImgCrop from 'antd-img-crop'
+import ImgCrop from 'antd-img-crop';
 import type { UploadFile, UploadProps } from 'antd';
 import { Upload } from 'antd';
 import { useQuery } from '@apollo/client';
@@ -15,42 +14,49 @@ interface OSSDataType {
 }
 
 interface OSSUploadProps {
-  value?: UploadFile;
-  onChange?: (file?: UploadFile) => void;
+  value?: UploadFile[];
+  label?: string;
+  maxCount?: number;
+  imgCropAspect?: number;
+  onChange?: (files: UploadFile[]) => void;
 }
 
-const OSSImageUpload = ({ value, onChange }: OSSUploadProps) => {
-    const key=useRef('')
-    const {data,refetch}=useQuery<{getOSSInfo:OSSDataType}>(GET_OSS_INFO)
+const OSSImageUpload = ({
+  label,
+  maxCount,
+  value,
+  imgCropAspect,
+  onChange,
+}: OSSUploadProps) => {
+  const { data, refetch } = useQuery<{ getOSSInfo: OSSDataType }>(GET_OSS_INFO);
 
   // Mock get OSS api
   // https://help.aliyun.com/document_detail/31988.html
-  const OSSData =data?.getOSSInfo
+  const OSSData = data?.getOSSInfo;
 
-  const handleChange: UploadProps['onChange'] = ({ file }) => {
-    if (file.status==='removed') {
-        onChange?.();
-        return
-    }
-    const newFile={
-        ...file,
-        url:`${OSSData?.host}/${key.current}`
-    }
-    onChange?.(newFile);
+  const getKey = (file: UploadFile) => {
+    const suffix = file.name.slice(file.name.lastIndexOf('.'));
+    const key = `${OSSData?.dir}${file.uid}${suffix}`;
+    const url = `${OSSData?.host}/${key}`;
+    return { key, url };
+  };
+
+  const handleChange: UploadProps['onChange'] = ({ fileList }) => {
+    const files = fileList.map((f) => ({
+      ...f,
+      url: f.url || getKey(f).url,
+    }));
+    onChange?.(files);
   };
 
   const getExtraData: UploadProps['data'] = (file) => {
-    const suffix=file.name.slice(file.name.lastIndexOf('.'))
-    const filename=Date.now()+suffix
-    key.current =`${OSSData?.dir}/${filename}`
-    return{
-        key:key.current,
-        OSSAccessKeyId: OSSData?.accessId,
-        policy: OSSData?.policy,
-        Signature: OSSData?.signature,
-    }
-  }
-
+    return {
+      key: getKey(file).key,
+      OSSAccessKeyId: OSSData?.accessId,
+      policy: OSSData?.policy,
+      Signature: OSSData?.signature,
+    };
+  };
 
   const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
     if (!OSSData) return false;
@@ -65,23 +71,27 @@ const OSSImageUpload = ({ value, onChange }: OSSUploadProps) => {
   };
 
   return (
-    <ImgCrop>
-        <Upload
-            name= 'file'
-            listType='picture-card'
-            fileList= {value?[value]:[]}
-            action= {OSSData?.host}
-            onChange= {handleChange}
-            data= {getExtraData}
-            beforeUpload={beforeUpload}
-        >
-            +替换头像
-        </Upload>
+    <ImgCrop aspect={imgCropAspect}>
+      <Upload
+        name="file"
+        maxCount={maxCount}
+        listType="picture-card"
+        fileList={value}
+        action={OSSData?.host}
+        onChange={handleChange}
+        data={getExtraData}
+        beforeUpload={beforeUpload}
+      >
+        {label}
+      </Upload>
     </ImgCrop>
   );
 };
-OSSImageUpload.defaultProps={
-    value:null,
-    onChange:()=>{}
-}
+OSSImageUpload.defaultProps = {
+  label: '上传图片',
+  value: null,
+  maxCount: 1,
+  imgCropAspect: 1,
+  onChange: () => {},
+};
 export default OSSImageUpload;

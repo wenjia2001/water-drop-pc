@@ -5,6 +5,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:prettier/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
@@ -14,20 +15,22 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
-  settings:{
-    react:{
-      'version':'detect'
+  settings: {
+    react: {
+      version: 'detect',
     },
-    'import/resolver':{
-      'alias':{
-        'map':[
-          [
-            '@','./src'
-          ]
-        ],
-        'extensions':['.ts','.tsx']
-      }
-    }
-  }
-}
+    'import/resolver': {
+      alias: {
+        map: [['@', './src']],
+        extensions: ['.ts', '.tsx'],
+      },
+    },
+  },
+};

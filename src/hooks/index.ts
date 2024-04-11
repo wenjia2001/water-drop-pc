@@ -1,11 +1,11 @@
-import { getRouteByKey, routes } from '@/routes/menus';
+import { ROUTE_CONFIG, ROUTE_KEY, getRouteByKey, routes } from '@/routes/menus';
 import { useEffect, useMemo } from 'react';
 import { matchPath, useLocation, useNavigate } from 'react-router-dom';
 
 export const useTitle = (title: string) => {
   useEffect(() => {
     document.title = title;
-  }, [title]);
+  }, []);
 };
 
 // 通用页面跳转器
@@ -39,8 +39,16 @@ export const useGoTo = () => {
 export const useMatchedRoute = () => {
   const r = useLocation();
   const route = useMemo(
-    () => routes.find((item) => matchPath(item.path, r.pathname)),
+    () => routes.find((item) => matchPath(`/${item.path}`, r.pathname)),
     [r.pathname],
   );
   return route;
+};
+
+export const useIsOrgRoute = () => {
+  const curRoute = useMatchedRoute();
+  if (curRoute?.path === ROUTE_CONFIG[ROUTE_KEY.ORG].path) {
+    return true;
+  }
+  return false;
 };

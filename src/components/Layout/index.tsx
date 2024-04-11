@@ -8,7 +8,7 @@ import {
 import { useUserContext } from '@/hooks/userHooks';
 import { AUTH_TOKEN } from '@/utils/constants';
 import { ROUTE_KEY, routes } from '@/routes/menus';
-import { useGoTo } from '@/hooks';
+import { useGoTo, useIsOrgRoute } from '@/hooks';
 import { Space, Tooltip } from 'antd';
 import { LogoutOutlined, ShopOutlined } from '@ant-design/icons';
 import OrgSelect from '../OrgSelect';
@@ -22,6 +22,7 @@ const menuItemRender = (item: MenuDataItem, dom: React.ReactNode) => (
 const Layout = () => {
   const outlet = useOutlet();
   const { store } = useUserContext();
+  const isOrg = useIsOrgRoute();
   const nav = useNavigate();
   const { go } = useGoTo();
   const logoutHandler = () => {
@@ -60,13 +61,15 @@ const Layout = () => {
       onMenuHeaderClick={() => nav('/')}
       className={style.container}
       actionsRender={() => [
-        <OrgSelect />,
+        !isOrg && <OrgSelect />,
         <Tooltip title="门店管理">
           <ShopOutlined onClick={goToOrg} />
         </Tooltip>,
       ]}
     >
-      <PageContainer>{outlet}</PageContainer>
+      <PageContainer>
+        <div key={store.currentOrg}>{outlet}</div>
+      </PageContainer>
     </ProLayout>
   );
 };

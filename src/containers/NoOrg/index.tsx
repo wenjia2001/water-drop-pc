@@ -13,7 +13,7 @@ const NoOrg = () => {
     if (store.currentOrg) {
       go();
     }
-  }, [go, store.currentOrg]);
+  }, [store.currentOrg]);
 
   return (
     <Result

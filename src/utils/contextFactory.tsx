@@ -1,21 +1,20 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import { IPropChild } from './types';
 
-interface IStore {
+interface IStore<T> {
   key: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  store: Record<string, any>;
+  store: T;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setStore: (payload: Record<string, any>) => void;
+  setStore: (payload: Partial<T>) => void;
 }
 
-const getCxtProvider =
-  (
-    key: string,
-    defaultValue: Record<string, unknown>,
-    AppContext: React.Context<IStore>,
-  ) =>
-  ({ children }: IPropChild) => {
+function getCxtProvider<T>(
+  key: string,
+  defaultValue: T,
+  AppContext: React.Context<IStore<T>>,
+) {
+  return ({ children }: IPropChild) => {
     const [store, setStore] = useState(defaultValue);
 
     const value = useMemo(
@@ -33,15 +32,17 @@ const getCxtProvider =
 
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
   };
+}
 
 const cxtCache: Record<string, Cxt> = {};
 
-class Cxt {
-  defaultStore: IStore;
-  AppContext: React.Context<IStore>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+class Cxt<T = any> {
+  defaultStore: IStore<T>;
+  AppContext: React.Context<IStore<T>>;
   Provider: ({ children }: IPropChild) => JSX.Element;
 
-  constructor(key: string, defaultValue: Record<string, unknown>) {
+  constructor(key: string, defaultValue: T) {
     this.defaultStore = {
       key,
       store: defaultValue,
@@ -53,24 +54,21 @@ class Cxt {
   }
 }
 
-export const useAppContext = (key: string) => {
-  const cxt = cxtCache[key];
+export function useAppContext<T>(key: string) {
+  const cxt = cxtCache[key] as Cxt<T>;
   const app = useContext(cxt.AppContext);
   return {
     store: app.store,
     setStore: app.setStore,
   };
-};
-export const connectFactory = (
-  key: string,
-  defaultValue: Record<string, unknown>,
-) => {
+}
+export function connectFactory<T>(key: string, defaultValue: T) {
   const cxt = cxtCache[key];
-  let CurCxt: Cxt;
+  let CurCxt: Cxt<T>;
   if (cxt) {
     CurCxt = cxt;
   } else {
-    CurCxt = new Cxt(key, defaultValue);
+    CurCxt = new Cxt<T>(key, defaultValue);
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (Child: React.FunctionComponent<any>) => (props: any) => (
@@ -78,4 +76,4 @@ export const connectFactory = (
       <Child {...props} />
     </CurCxt.Provider>
   );
-};
+}

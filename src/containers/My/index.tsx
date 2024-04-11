@@ -56,7 +56,7 @@ const My = () => {
             },
           });
           if (res.data.updateUserInfo.code === 200) {
-            store.refetchHandler();
+            store.refetchHandler?.();
             console.log('stire', store);
             message.success(res.data.updateUserInfo.message);
             window.location.reload(); // 刷新页面

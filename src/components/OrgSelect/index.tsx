@@ -6,15 +6,8 @@ import { LOCAL_CURRENT_ORG } from '@/utils/constants';
 import { useEffect } from 'react';
 import { useGoTo } from '@/hooks';
 import { ROUTE_KEY } from '@/routes/menus';
+import { currentOrg } from '@/utils';
 
-const currentOrg = () => {
-  try {
-    const res = JSON.parse(localStorage.getItem(LOCAL_CURRENT_ORG) || '');
-    return res;
-  } catch {
-    return undefined;
-  }
-};
 /**
  *门店选择器
  */
@@ -35,7 +28,7 @@ const OrgSelect = () => {
     } else {
       go(ROUTE_KEY.NoOrg);
     }
-  }, [go, setStore]);
+  }, []);
   const onChangeHandler = (val: { value: string; lable: string }) => {
     setStore({
       currentOrg: val.value,

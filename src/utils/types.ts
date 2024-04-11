@@ -8,6 +8,8 @@ export interface IUser {
   name: string;
   desc: string;
   avatar: string;
+  refetchHandler?: () => void;
+  currentOrg?: string;
 }
 
 export interface IPage {
@@ -50,3 +52,43 @@ export type TOrgsQuery = {
 export type TOrgQuery = {
   [key: string]: { __typename?: 'Query'; data: IOrganization };
 };
+
+export type TWeek =
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday';
+
+export interface IOrderTime {
+  startTime: string;
+  endTime: string;
+  key: number;
+}
+
+export interface IWeekCourse {
+  week: TWeek;
+  orderTime: IOrderTime[];
+}
+
+export interface ICourse {
+  id: string;
+  name: string;
+  desc: string;
+  group: string;
+  baseAbility: string;
+  limitNumber: number;
+  duration: number;
+  reserveInfo: string;
+  refundInfo: string;
+  otherInfo: string;
+  reducibleTime: IWeekCourse[];
+}
+
+export type TCourseQuery = {
+  [key: string]: { __typename?: 'Query'; data: ICourse; page: IPage };
+};
+
+export type TBaseCourse = Partial<ICourse>;

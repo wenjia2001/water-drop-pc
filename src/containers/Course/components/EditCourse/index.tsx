@@ -47,7 +47,6 @@ const EditCourse = ({ onClose, id }: IProps) => {
       width={720}
       open
       onClose={() => onClose()}
-      forceRender
       extra={
         <Space>
           <Button onClick={() => onClose()}>取消</Button>

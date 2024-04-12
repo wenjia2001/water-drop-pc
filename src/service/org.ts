@@ -55,3 +55,22 @@ export const useEditInfo = (): [handleEdit: Function, loading: boolean] => {
   };
   return [handleEdit, loading];
 };
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const useDeleteOrg = (): [handleEdit: Function, loading: boolean] => {
+  const [del, { loading }] = useMutation(COMMIT_ORG);
+  const delHandler = async (id: number, callback: () => void) => {
+    const res = await del({
+      variables: {
+        id,
+      },
+    });
+    if (res.data.deleteOrganization.code === 200) {
+      message.success(res.data.deleteOrganization.message);
+      callback();
+      return;
+    }
+    message.error(res.data.deleteOrganization.message);
+  };
+  return [delHandler, loading];
+};

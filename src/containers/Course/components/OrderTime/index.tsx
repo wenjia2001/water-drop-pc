@@ -75,6 +75,9 @@ const OrderTime = ({ id, onClose }: IProps) => {
             console.log('newData', newData);
             onSaveHandler(newData);
           },
+          onDelete: async (id) => {
+            onDeleteHandler(id as number);
+          },
         }}
       />
       <Row gutter={20} className={style.buttons}>

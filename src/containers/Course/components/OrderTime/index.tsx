@@ -18,6 +18,7 @@ interface IProps {
  */
 const OrderTime = ({ id, onClose }: IProps) => {
   const [curDay, setCurDay] = useState(DAYS[0]);
+  const [open, setOpen] = useState(true);
   const onTabChangeHandler = (key: string) => {
     const current = DAYS.find((itme) => itme.key === key) as IDay;
     setCurDay(current);
@@ -34,8 +35,9 @@ const OrderTime = ({ id, onClose }: IProps) => {
     <Drawer
       title={'编辑可约时间'}
       width={720}
-      open
-      onClose={() => onClose()}
+      open={open}
+      onClose={() => setOpen(false)}
+      afterOpenChange={(o) => !o && onClose()}
       forceRender
     >
       <Tabs items={DAYS} type="card" onChange={onTabChangeHandler} />

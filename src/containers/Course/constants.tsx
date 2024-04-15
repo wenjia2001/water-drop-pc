@@ -42,7 +42,7 @@ export const getColumns: ({
     dataIndex: 'id',
     align: 'center',
     width: 300,
-    render: (_text, entity) => [
+    render: (_text, entity) => (
       <Space>
         <Button key="edit" type="link" onClick={() => onEditHandler(entity.id)}>
           编辑
@@ -61,8 +61,8 @@ export const getColumns: ({
         >
           关联消费卡
         </Button>
-      </Space>,
-    ],
+      </Space>
+    ),
   },
 ];
 

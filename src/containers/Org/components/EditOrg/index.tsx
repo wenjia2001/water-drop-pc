@@ -12,7 +12,7 @@ import {
   Button,
 } from 'antd';
 import { useEditInfo, useOrganization } from '@/service/org';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { UploadFile } from 'antd/lib';
 import { IOrganization } from '@/utils/types';
 
@@ -27,6 +27,7 @@ const EditOrg = ({ id, onClose }: IPop) => {
   const [form] = Form.useForm();
   const { data, loading: queryLoading } = useOrganization(id);
   const [edit, editLoading] = useEditInfo();
+  const [open, setOpen] = useState(true);
   const onFinishHandler = async () => {
     const values = await form.validateFields();
     if (values) {
@@ -71,8 +72,9 @@ const EditOrg = ({ id, onClose }: IPop) => {
     <Drawer
       title="编辑门店信息"
       width="70vw"
-      onClose={onClose}
-      open
+      open={open}
+      onClose={() => setOpen(false)}
+      afterOpenChange={(o) => !o && onClose()}
       footer={
         <Button loading={editLoading} type="primary" onClick={onFinishHandler}>
           保存

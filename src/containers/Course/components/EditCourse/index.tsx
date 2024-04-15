@@ -10,7 +10,7 @@ import {
   Space,
   Spin,
 } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const { TextArea } = Input;
 interface IProps {
@@ -21,6 +21,7 @@ interface IProps {
 const EditCourse = ({ onClose, id }: IProps) => {
   const [form] = Form.useForm();
   const [edit, editLoading] = useEditCourseInfo();
+  const [open, setOpen] = useState(true);
   const { getCourse, loading } = useCourse();
 
   useEffect(() => {
@@ -45,8 +46,9 @@ const EditCourse = ({ onClose, id }: IProps) => {
     <Drawer
       title={id ? '编辑课程' : '新建课程'}
       width={720}
-      open
-      onClose={() => onClose()}
+      open={open}
+      onClose={() => setOpen(false)}
+      afterOpenChange={(o) => !o && onClose()}
       extra={
         <Space>
           <Button onClick={() => onClose()}>取消</Button>

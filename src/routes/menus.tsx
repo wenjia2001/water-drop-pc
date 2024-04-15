@@ -1,4 +1,5 @@
 import {
+  GiftOutlined,
   HomeOutlined,
   PicRightOutlined,
   ShopOutlined,
@@ -18,6 +19,7 @@ export const ROUTE_KEY = {
   PAGE_404: 'p404',
   NoOrg: 'onOrg',
   COURSE: 'course',
+  PRODUCT: 'product',
 };
 
 export const ROUTE_CONFIG: Record<string, IRoute> = {
@@ -52,6 +54,11 @@ export const ROUTE_CONFIG: Record<string, IRoute> = {
     path: 'course',
     name: '课程管理',
     icon: <PicRightOutlined />,
+  },
+  [ROUTE_KEY.PRODUCT]: {
+    path: 'product',
+    name: '商品管理',
+    icon: <GiftOutlined />,
   },
 };
 

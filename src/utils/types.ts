@@ -90,6 +90,9 @@ export interface ICourse {
 export type TCourseQuery = {
   [key: string]: { __typename?: 'Query'; data: ICourse; page: IPage };
 };
+export type TCoursesQuery = {
+  [key: string]: { __typename?: 'Query'; data: ICourse[]; page: IPage };
+};
 
 export type TBaseCourse = Partial<ICourse>;
 
@@ -99,8 +102,32 @@ export interface ICard {
   type: string;
   time: number;
   validityDay: number;
+  course: ICourse;
 }
 
 export type TCardsQuery = {
   [key: string]: { __typename?: 'Query'; data: ICard[]; page: IPage };
 };
+
+export interface IProduct {
+  id: string;
+  name: string;
+  desc: string;
+  stock: number;
+  limitBuyNumber: number;
+  coverUrl: string;
+  bannerUrl: string;
+  originalPrice: number;
+  preferentialPrice: number;
+  cards: ICard[];
+}
+
+export type TProductQuery = {
+  [key: string]: { __typename?: 'Query'; data: IProduct };
+};
+
+export type TProductsQuery = {
+  [key: string]: { __typename?: 'Query'; data: IProduct[]; page: IPage };
+};
+
+export type TBaseProduct = Partial<IProduct>;

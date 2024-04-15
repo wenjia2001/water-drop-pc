@@ -3,6 +3,7 @@ import { ICard } from '@/utils/types';
 import { EditableProTable } from '@ant-design/pro-components';
 import { getColumns } from './constants';
 import { useCards, useDeleteCard, useEditCardInfo } from '@/service/card';
+import { useState } from 'react';
 
 interface IProps {
   id: string;
@@ -15,6 +16,7 @@ const ConsumeCard = ({ onClose, id }: IProps) => {
   const { data, loading, refetch } = useCards(id);
   const [edit, editLoading] = useEditCardInfo();
   const [del, delLoading] = useDeleteCard();
+  const [open, setOpen] = useState(true);
   const onDeleteHandler = (id: string) => {
     del(id, refetch);
   };
@@ -34,7 +36,13 @@ const ConsumeCard = ({ onClose, id }: IProps) => {
   };
   console.log('id', id);
   return (
-    <Drawer title="关联消费卡" width="70vw" open onClose={() => onClose()}>
+    <Drawer
+      title="关联消费卡"
+      width="70vw"
+      open={open}
+      onClose={() => setOpen(false)}
+      afterOpenChange={(o) => !o && onClose()}
+    >
       <EditableProTable<ICard>
         headerTitle="请管理该课程的消费卡"
         rowKey="id"

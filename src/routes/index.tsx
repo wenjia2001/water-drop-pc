@@ -5,6 +5,7 @@ import Page404 from '@/containers/Page404';
 import Org from '@/containers/Org';
 import NoOrg from '@/containers/NoOrg';
 import Course from '@/containers/Course';
+import Product from '@/containers/Product';
 
 export const ROUTE_COMPONENT = {
   [ROUTE_KEY.HOME]: Home,
@@ -13,4 +14,5 @@ export const ROUTE_COMPONENT = {
   [ROUTE_KEY.PAGE_404]: Page404,
   [ROUTE_KEY.NoOrg]: NoOrg,
   [ROUTE_KEY.COURSE]: Course,
+  [ROUTE_KEY.PRODUCT]: Product,
 };

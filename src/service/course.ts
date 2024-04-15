@@ -1,6 +1,6 @@
 import { COMMIT_COURSE, GET_COURSES, GET_COURSE } from '@/graphql/course';
 import { DEFAULT_PAGE_SIZE } from '@/utils/constants';
-import { TBaseCourse, TCourseQuery } from '@/utils/types';
+import { TBaseCourse, TCourseQuery, TCoursesQuery } from '@/utils/types';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { message } from 'antd';
 
@@ -86,6 +86,7 @@ export const useCourse = () => {
   };
   return { getCourse, loading };
 };
+
 export const useCourseInfo = (id: string) => {
   const { data, loading, refetch } = useQuery<TCourseQuery>(GET_COURSE, {
     variables: {
@@ -93,4 +94,24 @@ export const useCourseInfo = (id: string) => {
     },
   });
   return { data: data?.getCourseInfo.data, loading, refetch };
+};
+
+export const useCoursesForSample = () => {
+  const [get, { data, loading }] = useLazyQuery<TCoursesQuery>(GET_COURSES);
+  const searchHandler = (name: string) => {
+    get({
+      variables: {
+        name,
+        page: {
+          pageNum: 1,
+          pageSize: DEFAULT_PAGE_SIZE,
+        },
+      },
+    });
+  };
+  return {
+    loading,
+    data: data?.getCourses.data,
+    search: searchHandler,
+  };
 };

@@ -29,7 +29,7 @@ function getCxtProvider<T>(
       }),
       [store],
     );
-
+    console.log('value', value);
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
   };
 }

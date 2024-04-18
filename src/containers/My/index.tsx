@@ -57,9 +57,9 @@ const My = () => {
           });
           if (res.data.updateUserInfo.code === 200) {
             store.refetchHandler?.();
-            console.log('stire', store);
+            console.log('store2', store);
             message.success(res.data.updateUserInfo.message);
-            window.location.reload(); // 刷新页面
+            // window.location.reload(); // 刷新页面
             return;
           }
           message.success('更新成功');

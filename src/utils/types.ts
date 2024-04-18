@@ -113,6 +113,7 @@ export interface IProduct {
   id: string;
   name: string;
   desc: string;
+  status: string;
   stock: number;
   limitBuyNumber: number;
   coverUrl: string;

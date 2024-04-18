@@ -6,15 +6,17 @@ interface IProps {
   onEditHandler: (id: string) => void;
   onCardHandler: (id: string) => void;
   onDeleteHandler: (id: string) => void;
+  onStatusHandler: (id: string, status: string) => void;
 }
-export const getColumns: ({
+const PRODUCT_STATUS = {
+  LIST: 'LIST', //商品上架
+  UN_LIST: 'UN_LIST', //商品下架
+};
+export const getColumns: (props: IProps) => ProColumns<IProduct, 'text'>[] = ({
   onEditHandler,
   onCardHandler,
   onDeleteHandler,
-}: IProps) => ProColumns<IProduct, 'text'>[] = ({
-  onEditHandler,
-  onCardHandler,
-  onDeleteHandler,
+  onStatusHandler,
 }) => [
   {
     dataIndex: 'id',
@@ -97,6 +99,24 @@ export const getColumns: ({
     width: 200,
     render: (_text, entity) => (
       <Space>
+        {entity.status === PRODUCT_STATUS.UN_LIST ? (
+          <a
+            key="list"
+            type="link"
+            onClick={() => onStatusHandler(entity.id, PRODUCT_STATUS.LIST)}
+          >
+            上架
+          </a>
+        ) : (
+          <a
+            key="unList"
+            style={{ color: 'green' }}
+            type="link"
+            onClick={() => onStatusHandler(entity.id, PRODUCT_STATUS.UN_LIST)}
+          >
+            下架
+          </a>
+        )}
         <a key="edit" type="link" onClick={() => onEditHandler(entity.id)}>
           编辑
         </a>

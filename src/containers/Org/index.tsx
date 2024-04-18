@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import style from './index.module.less';
 import { PageContainer, ProList } from '@ant-design/pro-components';
-import { Button, Tag } from 'antd';
+import { Button, Popconfirm, Tag } from 'antd';
 import { DEFAULT_PAGE_SIZE } from '@/utils/constants';
 import EditOrg from './components/EditOrg';
-import { useOrganizations } from '@/service/org';
+import { useDeleteOrg, useOrganizations } from '@/service/org';
 import { useState } from 'react';
 
 /**
@@ -14,13 +14,14 @@ const Org = () => {
   const { loading, data, page, refetch } = useOrganizations();
   const [showEdit, setShowEdit] = useState(false);
   const [curId, setCurId] = useState('');
+  const [del, delLoading] = useDeleteOrg();
   const editInfiHandler = (id: string) => {
     setCurId(id);
     setShowEdit(true);
   };
   const delInfoHandler = (id: string) => {
     setCurId(id);
-    setShowEdit(true);
+    del(id);
   };
   const addInfoHandler = () => {
     setCurId('');
@@ -66,7 +67,15 @@ const Org = () => {
       // </Popconfirm>,
       <>
         <a onClick={() => editInfiHandler(item.id)}>编辑</a>
-        <a onClick={() => delInfoHandler(item.id)}>删除</a>
+        <Popconfirm
+          title="删除此项"
+          description="确认删除吗？"
+          onConfirm={() => delInfoHandler(item.id)}
+          okText="确定"
+          cancelText="取消"
+        >
+          <a>删除</a>
+        </Popconfirm>
       </>,
     ],
     content: item.address,
@@ -75,7 +84,7 @@ const Org = () => {
   return (
     <div className={style.container}>
       <PageContainer
-        loading={loading}
+        loading={loading || delLoading}
         header={{
           title: '门店管理',
         }}

@@ -49,6 +49,7 @@ const EditOrg = ({ id, onClose }: IPop) => {
         })),
       } as IOrganization;
       edit(id, formData);
+      () => onClose();
     }
   };
   const initValue = useMemo(

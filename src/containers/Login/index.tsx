@@ -34,6 +34,7 @@ export default () => {
     });
     if (res.data.login.code === 200) {
       store.refetchHandler?.();
+      console.log('store1', store);
       if (values.autoLogin) {
         sessionStorage.setItem(AUTH_TOKEN, '');
         localStorage.setItem(AUTH_TOKEN, res.data.login.data);

@@ -1,4 +1,10 @@
-import { COMMIT_ORG, GET_ORG, GET_ORGS, GET_SAMPLE_ORGS } from '@/graphql/org';
+import {
+  COMMIT_ORG,
+  DELETE_ORG,
+  GET_ORG,
+  GET_ORGS,
+  GET_SAMPLE_ORGS,
+} from '@/graphql/org';
 import { DEFAULT_PAGE_SIZE } from '@/utils/constants';
 import { TBasePrganization, TOrgQuery, TOrgsQuery } from '@/utils/types';
 import { useMutation, useQuery } from '@apollo/client';
@@ -58,7 +64,7 @@ export const useEditInfo = (): [handleEdit: Function, loading: boolean] => {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const useDeleteOrg = (): [handleEdit: Function, loading: boolean] => {
-  const [del, { loading }] = useMutation(COMMIT_ORG);
+  const [del, { loading }] = useMutation(DELETE_ORG);
   const delHandler = async (id: number, callback: () => void) => {
     const res = await del({
       variables: {
